@@ -24,12 +24,6 @@ contract ReputationManager is Ownable {
 
     constructor() Ownable(msg.sender) {}
 
-    /**
-     * @notice Registers a new user, confirming their unique identity.
-     * @dev In a real implementation, this would be linked to an off-chain
-     * proof-of-personhood check via Moca ID credentials before this function is called.
-     * Integration with the UniversalVerifier contract needs to be implemented.
-     */
     function registerUser() external {
         require(
             !_registeredUsers[msg.sender],
