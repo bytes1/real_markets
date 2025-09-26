@@ -1,6 +1,6 @@
-# RealMarket Protocol – Smart Contracts
+# 🪙 TrueMarket Protocol – Smart Contracts
 
-This repository contains the **core smart contracts** for the RealMarket Protocol, a **reputation-based prediction market**.
+This directory contains the core smart contracts for the TrueMarket Protocol, a **reputation-based prediction market** built on the Moca Network.
 
 ---
 
@@ -24,7 +24,7 @@ This repository contains the **core smart contracts** for the RealMarket Protoco
 - Market resolution is handled by the **admin (owner)**.
 - Rewards winning participants and updates their reputation via **ReputationManager**.
 
-### **RealMarketFactory.sol**
+### **TrueMarketFactory.sol**
 
 - Deploys and manages all **PredictionMarket** contracts.
 - Tracks each deployed market instance.
@@ -32,17 +32,27 @@ This repository contains the **core smart contracts** for the RealMarket Protoco
 
 ---
 
-## 📍 Deployed Addresses (Moca Testnet)
+## 📍 Deployed Addresses (Moca Testnet) - Note: Contract names updated
 
 - **TUSD (Collateral):** `0xE73559ce9FD6dde324210A4D250610F41728029d`
 - **ReputationManager:** `0x6e5b1B891510DbA56D79914bC33AA0c5fBE1C839`
-- **RealMarketFactory:** `0xd25929931c0A761D8Ce7cE6fa6b6262223F828ac`
+- **TrueMarketFactory:** `0xd25929931c0A761D8Ce7cE6fa6b6262223F828ac`
+
+---
+
+## 🆔 Proof-of-Personhood IDs (Moca Testnet)
+
+- **Partner ID:** `8a222988-f7f8-42d3-9b39-543d93d6fb16`
+- **Issuer DID:** `did:air:id:test:4P7hewb4uup7yXSjCpMgYKSS4jbxJJcKN5qJFu4KDM`
+- **Verifier DID:** `did:key:81euP4PQpXKBieSqhtVqRUUxA1tMhLYhUhdAXLnoMzB2Vzeq8anV7Y1PdQyXm2HyJ29kCNopbPjLpQsmCNMzCgGxmv`
+- **Issuer Schema ID:** `c21pp060o90f20065313lz`
+- **Verifier Program ID:** `c21pp030oeirj0051859o0`
 
 ---
 
 ## � Progress
 
-- ✅ Core contracts implemented (ReputationManager, PredictionMarket, RealMarketFactory).
+- ✅ Core contracts implemented (ReputationManager, PredictionMarket, TrueMarketFactory).
 - 🔄 **UniversalVerifier integration** pending (for proof-of-personhood).
 - 🖥 Frontend development in progress (UX reference: **Limitless Exchange**).
 

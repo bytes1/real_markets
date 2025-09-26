@@ -1,4 +1,4 @@
-# Airkit Example
+# True Market - Frontend
 
 ## Prerequisites
 
@@ -9,9 +9,10 @@
 ## Instructions
 
 1. Clone the repository
+
    ```bash
    git clone <repository-url>
-   cd airkit-example
+   cd true_markets/frontend
    ```
 
 2. Install the dependencies
@@ -21,6 +22,7 @@
    yarn install
    ```
 3. Run the example
+
    ```bash
    npm run dev
    # or
