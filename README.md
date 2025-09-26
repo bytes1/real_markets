@@ -16,9 +16,9 @@ This results in a **smarter, more trustworthy, and regulation-ready prediction m
 
 ## 🚧 Current Progress
 
-- ✅ Core contract partially implemented.
-- 🔄 Integration with **UniversalVerifier contract** is pending.
-- 🎨 Frontend development in progress, using **Limitless Exchange UX** as a design reference.
+- ✅ Core contract implemented.
+- 🔄 Integration with **UniversalVerifier contract** is completed.
+- 🎨 Frontend development completed, using **Limitless Exchange UX** as a design reference.
 
 ---
 

@@ -32,7 +32,15 @@ This repository contains the **core smart contracts** for the RealMarket Protoco
 
 ---
 
-## 🚧 Progress
+## 📍 Deployed Addresses (Moca Testnet)
+
+- **TUSD (Collateral):** `0xE73559ce9FD6dde324210A4D250610F41728029d`
+- **ReputationManager:** `0x6e5b1B891510DbA56D79914bC33AA0c5fBE1C839`
+- **RealMarketFactory:** `0xd25929931c0A761D8Ce7cE6fa6b6262223F828ac`
+
+---
+
+## � Progress
 
 - ✅ Core contracts implemented (ReputationManager, PredictionMarket, RealMarketFactory).
 - 🔄 **UniversalVerifier integration** pending (for proof-of-personhood).
