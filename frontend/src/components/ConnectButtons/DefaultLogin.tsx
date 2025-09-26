@@ -7,10 +7,7 @@ export const DefaultLogin = () => {
   const config = useConfig();
 
   return (
-    <div className="mx-auto p-6 bg-white">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">
-        Connect with Default Method
-      </h2>
+    <div>
       <div className="max-w-md mx-auto">
         <Button
           onClick={() => {

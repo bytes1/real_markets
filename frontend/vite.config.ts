@@ -10,7 +10,8 @@ export default defineConfig({
   server: {
     port: 5173,
   },
-  base: process.env.NODE_ENV === "production" ? "/example/" : "/",
+  // Fix this line - use "/" for Vercel deployment
+  base: "/", // or base: "./" for relative paths
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

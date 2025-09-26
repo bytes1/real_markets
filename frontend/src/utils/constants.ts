@@ -43,6 +43,12 @@ const ERC721_ADDRESSES: { [chainId: number]: Address } = {
   [mocaTestnet.id]: "0x6c513255C62D9036aFd14dA3633C4f2e4239adD1",
 };
 
+const SPECIFIED_TOKEN_ADDRESSES: { [chainId: number]: Address } = {
+  [baseSepolia.id]: "0xE73559ce9FD6dde324210A4D250610F41728029d",
+  [soneiumMinato.id]: "0xE73559ce9FD6dde324210A4D250610F41728029d",
+  [mocaTestnet.id]: "0xE73559ce9FD6dde324210A4D250610F41728029d",
+};
+
 export const MOCK_ERC20_CONTRACT = (chainId: number) => {
   const erc20Address = ERC20_ADDRESSES[chainId];
 
@@ -91,3 +97,19 @@ export const MOCK_ERC721_CONTRACT = (chainId: number) => {
     ],
   };
 };
+
+export const SPECIFIED_TOKEN_ADDRESS = (chainId: number) => {
+  const specifiedTokenAddress = SPECIFIED_TOKEN_ADDRESSES[chainId];
+
+  if (!specifiedTokenAddress) {
+    throw new Error(`No specified token address found for chainId: ${chainId}`);
+  }
+
+  return specifiedTokenAddress;
+};
+
+// PREDICTION MARKET CONSTANTS
+export const REAL_MARKET_FACTORY_ADDRESS =
+  "0xd25929931c0A761D8Ce7cE6fa6b6262223F828ac" as Address;
+export const COLLATERAL_TOKEN_ADDRESS =
+  "0xE73559ce9FD6dde324210A4D250610F41728029d" as Address;

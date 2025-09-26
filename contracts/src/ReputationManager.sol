@@ -4,9 +4,20 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
+interface IMinimalVerifier {
+    function requestIdExists(uint64 requestId) external view returns (bool);
+    function isProofVerified(
+        address sender,
+        uint64 requestId
+    ) external view returns (bool);
+}
+
 contract ReputationManager is Ownable {
     // Mapping from a user's address to their reputation score
     mapping(address => int256) public reputationScores;
+    uint64 private constant VERIFICATION_REQUEST_ID = 1971348101806788608;
+    IMinimalVerifier verifier =
+        IMinimalVerifier(0xEfdefe08C6cD74CFEB2f0CC2B9401c52B859B427);
 
     // Mapping to track registered users to prevent Sybil attacks
     mapping(address => bool) private _registeredUsers;
@@ -28,6 +39,10 @@ contract ReputationManager is Ownable {
         require(
             !_registeredUsers[msg.sender],
             "ReputationManager: User already registered"
+        );
+        require(
+            verifier.isProofVerified(msg.sender, VERIFICATION_REQUEST_ID),
+            "ReputationManager: Proof verification required"
         );
         _registeredUsers[msg.sender] = true;
         reputationScores[msg.sender] = 0; // Starting reputation
