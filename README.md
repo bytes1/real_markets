@@ -44,6 +44,16 @@ This results in a **smarter, more trustworthy, and regulation-ready prediction m
 
 ---
 
+## 📈 Deployed Markets (Moca Testnet)
+
+| Market | Condition                                                           | Address                                      |
+| ------ | ------------------------------------------------------------------- | -------------------------------------------- |
+| **1**  | Will Ethereum's price surpass $10,000 by the end of 2025?           | `0x6E98B581D06F88865Efb2E36fE013a44d575Da25` |
+| **2**  | Will the global crypto market cap exceed $5 trillion in 2025?       | `0xbf68A59eeeB7C9F03ca42bccF3B179Becd83fecc` |
+| **3**  | Will a major central bank issue a consumer-facing CBDC before 2027? | `0xa6cb11739cDBD0b6182Fc93B35AAAc84dC3659ac` |
+
+---
+
 ## Next Steps
 
 - Complete **UniversalVerifier contract integration**.
