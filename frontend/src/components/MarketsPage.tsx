@@ -73,7 +73,7 @@ export const MarketsPage = () => {
 
   if (isDesktop) {
     return (
-      <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
+      <div className="p-4 md:p-8 bg-gray-50 ">
         <div className="flex flex-row gap-6">
           <div className="flex-1">{marketGrid}</div>
           {selectedMarket && (
@@ -91,7 +91,7 @@ export const MarketsPage = () => {
 
   // Mobile View
   return (
-    <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-gray-50 ">
       {marketGrid}
       <Drawer open={isDrawerOpen} onOpenChange={setDrawerOpen}>
         <DrawerContent>

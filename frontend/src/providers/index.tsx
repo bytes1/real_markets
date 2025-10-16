@@ -4,7 +4,7 @@ import { WagmiProvider } from "wagmi";
 import { LogProvider } from "../contexts/LogProvider";
 import { PartnerContext } from "../contexts/PartnerContext";
 import { getConfig } from "../utils/wagmi";
-
+import { AirServiceProvider } from "./../contexts/AirServiceContext";
 const queryClient = new QueryClient();
 
 export const Providers: FC<{
@@ -19,7 +19,7 @@ export const Providers: FC<{
       <LogProvider>
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
-            {children}
+            <AirServiceProvider>{children}</AirServiceProvider>
           </QueryClientProvider>
         </WagmiProvider>
       </LogProvider>

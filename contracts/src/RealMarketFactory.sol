@@ -3,61 +3,79 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PredictionMarket.sol";
+import "./ExclusiveMarket.sol";
+import "./ReputationManager.sol";
 
+/**
+ * @title RealMarketFactory
+ * @dev A factory for creating both standard and exclusive prediction markets.
+ */
 contract RealMarketFactory is Ownable {
     address[] public allMarkets;
-
-    address public immutable reputationManager;
-    address public immutable collateralToken;
+    IERC20 public immutable collateralToken;
+    ReputationManager public immutable reputationManager;
 
     event MarketCreated(
         address indexed marketAddress,
-        address indexed creator,
-        string question
+        string question,
+        bool isExclusive
     );
 
     constructor(
-        address _reputationManager,
-        address _collateralToken
+        address _collateralToken,
+        address _reputationManager
     ) Ownable(msg.sender) {
-        reputationManager = _reputationManager;
-        collateralToken = _collateralToken;
+        collateralToken = IERC20(_collateralToken);
+        reputationManager = ReputationManager(_reputationManager);
     }
 
     /**
-     * @notice Creates and deploys a new PredictionMarket.
-     * @param _question A string describing the market question.
-     * @return The address of the newly created market contract.
+     * @notice Creates a new standard prediction market.
+     * @dev Note: The base PredictionMarket does not store a question or end time.
      */
     function createMarket(
-        string calldata _question
+        string memory _question,
+        uint256 _duration
     ) external returns (address) {
         PredictionMarket newMarket = new PredictionMarket(
-            collateralToken,
-            reputationManager
+            address(collateralToken),
+            address(reputationManager)
         );
 
-        // Transfer ownership of the new market to the factory owner (protocol admin)
-        // so they have the authority to resolve it.
-        newMarket.transferOwnership(owner());
-
-        allMarkets.push(address(newMarket));
-
-        // Authorize the new market to update reputation scores
-        ReputationManager(reputationManager).setAuthorizedUpdater(
-            address(newMarket),
-            true
-        );
-
-        emit MarketCreated(address(newMarket), msg.sender, _question);
-        return address(newMarket);
+        address newMarketAddress = address(newMarket);
+        allMarkets.push(newMarketAddress);
+        emit MarketCreated(newMarketAddress, _question, false);
+        return newMarketAddress;
     }
 
     /**
-     * @notice Gets the number of markets created.
-     * @return The total count of markets.
+     * @notice Creates a new exclusive market.
      */
-    function marketCount() external view returns (uint256) {
-        return allMarkets.length;
+    function createExclusiveMarket(
+        string memory _question,
+        uint256 _duration,
+        uint256 _exclusiveDuration,
+        ReputationManager.Tier _requiredTier,
+        uint256 _requiredTradeCount
+    ) external returns (address) {
+        ExclusiveMarket newMarket = new ExclusiveMarket(
+            address(collateralToken),
+            address(reputationManager),
+            _question,
+            block.timestamp + _duration,
+            _exclusiveDuration,
+            _requiredTier,
+            _requiredTradeCount,
+            owner() // The factory owner becomes the market owner
+        );
+
+        address newMarketAddress = address(newMarket);
+        allMarkets.push(newMarketAddress);
+        emit MarketCreated(newMarketAddress, _question, true);
+        return newMarketAddress;
+    }
+
+    function getMarkets() external view returns (address[] memory) {
+        return allMarkets;
     }
 }

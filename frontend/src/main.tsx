@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { LandingPage } from "./pages/Landingpage.tsx";
 import { Providers } from "./providers"; // Import Providers
 import { MarketFullPage } from "./pages/MarketFullPage.tsx";
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 const partnerId = "8a222988-f7f8-42d3-9b39-543d93d6fb16";
 
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
     // New dynamic route for the full-page view
     path: "/market/:marketId",
     element: <MarketFullPage />,
+  },
+  {
+    // +++ Add this new route object
+    path: "/analytics",
+    element: <AnalyticsPage />,
   },
 ]);
 

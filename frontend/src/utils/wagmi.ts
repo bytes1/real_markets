@@ -11,7 +11,6 @@ export const getConfig = (partnerId: string) => {
       partnerId,
     }),
   ];
-
   return createConfig({
     chains: [mocaTestnet, baseSepolia, soneiumMinato],
     transports: {
@@ -22,3 +21,7 @@ export const getConfig = (partnerId: string) => {
     connectors,
   });
 };
+
+// --- FIX STARTS HERE ---
+
+// 1. Define a partnerId. You should ideally get this from an environment variable.

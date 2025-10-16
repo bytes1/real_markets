@@ -12,6 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAirService } from "../contexts/AirServiceContext";
+import { partnerId, privateKey, kid, jwtAlgorithm } from "@/utils/constants";
+import { generateJwt } from "@/utils/jwt";
 
 // Centralized contract addresses
 const USDC_CONTRACT_ADDRESS = "0xE73559ce9FD6dde324210A4D250610F41728029d";
@@ -20,12 +23,16 @@ const USDC_DECIMALS = 18;
 
 interface MarketTradePanelProps {
   market: Market;
+  mode?: "normal" | "exclusive"; // optional prop
 }
 
-export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
+export const MarketTradePanel = ({
+  market,
+  mode = "normal",
+}: MarketTradePanelProps) => {
   const { address: userAddress, isConnected } = useAccount();
   const { writeContractAsync, isPending } = useWriteContract();
-
+  const airService = useAirService();
   const [amount, setAmount] = useState("");
   const [selectedOutcome, setSelectedOutcome] = useState<0 | 1>(1);
 
@@ -45,18 +52,18 @@ export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
     },
   });
 
-  // NEW: Read the user's USDC balance
+  // Fetch the user's USDC balance only if they are connected AND registered.
   const { data: userBalance } = useReadContract({
     address: USDC_CONTRACT_ADDRESS,
     abi: ERC20_ABI,
     functionName: "balanceOf",
     args: [userAddress!],
     query: {
-      enabled: isConnected,
-      // Watch for changes to update the balance automatically
+      enabled: isConnected && isRegistered === true,
     },
   });
 
+  // Calculate the cost of the trade. Enabled only when an amount is entered and user is registered.
   const { data: cost, isLoading: isLoadingCost } = useReadContract({
     address: market.address as `0x${string}`,
     abi: PredictionMarketABI,
@@ -67,6 +74,7 @@ export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
     },
   });
 
+  // Check the allowance for the market contract. Enabled only if the user is connected AND registered.
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     address: USDC_CONTRACT_ADDRESS,
     abi: ERC20_ABI,
@@ -83,15 +91,50 @@ export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
     }
     return cost > allowance;
   }, [cost, allowance]);
-  console.log("allowance", allowance);
+
   // Handler for the "Register" transaction
   const handleRegister = async () => {
+    const programId =
+      mode === "normal" ? "c21pp030oeirj0051859o0" : "c21ps031izo3y00g1859n8";
+    const redirectUrl = "http://localhost:5173/issue";
+
+    if (!airService) {
+      alert("AirService is not initialized. Check the console for errors.");
+      return;
+    }
+
     try {
+      const jwt = await generateJwt({
+        partnerId,
+        privateKey,
+        kid,
+        jwtAlgorithm,
+      });
+
+      if (!jwt) {
+        throw new Error("Failed to generate JWT");
+      }
+
+      const result = await airService.verifyCredential({
+        authToken: jwt,
+        programId: programId,
+        redirectUrl: redirectUrl,
+      });
+
+      console.log("Verification Result:", result);
+
+      if (result.status !== "Compliant") {
+        throw new Error(
+          `Credential verification failed. Status: ${result.status}`
+        );
+      }
+
       await writeContractAsync({
         address: REPUTATION_MANAGER_ADDRESS,
         abi: ReputationManagerABI,
         functionName: "registerUser",
       });
+
       await refetchIsRegistered();
     } catch (error) {
       console.error("Registration failed:", error);
@@ -130,7 +173,7 @@ export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
   const getButtonAction = () => {
     if (!isConnected)
       return { text: "Connect Wallet", action: () => {}, disabled: true };
-    // New registration check
+    // Primary check: User must be registered to proceed.
     if (isRegistered === false)
       return { text: "Register to Participate", action: handleRegister };
     if (amountBigInt === 0n)
@@ -183,14 +226,15 @@ export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
                 <label htmlFor="amount" className="text-sm font-medium">
                   Amount of Shares
                 </label>
-                {typeof userBalance === "bigint" && (
+                {/* Balance is only shown if the user is registered and the hook has fetched the data */}
+                {isRegistered && typeof userBalance === "bigint" ? (
                   <span className="text-sm text-gray-500">
                     Balance:{" "}
                     {Number(
                       formatUnits(userBalance, USDC_DECIMALS)
                     ).toLocaleString()}
                   </span>
-                )}
+                ) : null}
               </div>
               <Input
                 id="amount"
@@ -198,7 +242,7 @@ export const MarketTradePanel = ({ market }: MarketTradePanelProps) => {
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                disabled={!isRegistered} // Disable input if not registered
+                disabled={!isRegistered} // Input is disabled until user is registered
               />
               {typeof cost === "bigint" && amountBigInt > 0n && (
                 <p className="text-sm text-gray-500 text-right">

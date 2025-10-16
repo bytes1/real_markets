@@ -1,36 +1,33 @@
 import { useState } from "react";
-import { cn } from "../utils/cn";
+// 1. Make sure you import the button from the correct path
+import { Button } from "@/components/ui/button";
+import { Check, Copy } from "lucide-react";
 
-interface CopyButtonProps {
-  text: string;
-  className?: string;
-}
+export const CopyButton = ({ text }: { text: string }) => {
+  const [isCopied, setIsCopied] = useState(false);
 
-export const CopyButton = ({ text, className = "" }: CopyButtonProps) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy text:", err);
-    }
+  const handleCopy = () => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
   };
 
   return (
-    <button
+    // 2. This Button is now the ref-forwarding one from shadcn/ui
+    <Button
       onClick={handleCopy}
-      className={cn(
-        "px-2 py-1 text-xs font-medium rounded hover:bg-opacity-80 transition-all",
-        copied
-          ? "bg-green-100 text-green-700"
-          : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-        className
-      )}
+      variant="ghost"
+      size="icon"
+      className="h-6 w-6"
     >
-      {copied ? "Copied!" : "Copy"}
-    </button>
+      {isCopied ? (
+        <Check className="h-4 w-4 text-green-500" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}
+    </Button>
   );
 };
