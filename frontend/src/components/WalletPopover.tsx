@@ -7,6 +7,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import WalletBalanceCard from "./WalletBalanceCard";
+import { Link } from "react-router-dom"; // +++ Import Link
+import { Separator } from "@/components/ui/separator"; // +++ Import Separator
 
 export function WalletPopover() {
   const { address, isConnected } = useAccount();
@@ -31,6 +33,16 @@ export function WalletPopover() {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 border-none shadow-lg rounded-2xl">
         <WalletBalanceCard />
+        <Separator />
+        <Link to="/profile" className="w-full">
+          <Button
+            variant="ghost"
+            className="w-full rounded-t-none rounded-b-2xl justify-start px-4 py-3 font-medium"
+          >
+            My Profile
+          </Button>
+        </Link>
+        <Separator />
       </PopoverContent>
     </Popover>
   );

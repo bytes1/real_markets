@@ -1,4 +1,5 @@
-import { multicall } from "@wagmi/core";
+// +++ CHANGE IMPORT FROM '@wagmi/core' TO 'wagmi/actions' +++
+import { multicall } from "wagmi/actions";
 import { useMemo, useState } from "react";
 import { encodeFunctionData, formatEther, parseAbi, parseUnits } from "viem";
 import {
