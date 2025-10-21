@@ -13,13 +13,13 @@ import { Layout } from "@/components/layouts/Layout";
 import { Separator } from "@/components/ui/separator";
 import { CopyButton } from "@/components/CopyButton";
 import { SPECIFIED_TOKEN_ADDRESS } from "@/utils/constants";
-import { Header } from "@/components/Header";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const API_URL = "http://localhost:3000/api/user"; // This is the API route
+const API_URL = "/api/user"; // This is the API route
 
 // Define the shape of the email preferences
 interface EmailPreferences {
@@ -147,178 +147,170 @@ export function ProfilePage() {
   };
 
   return (
-    <>
-      <Header />
-      <Layout>
-        <div className="container mx-auto p-4 mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Column 1: Profile & Settings */}
-          <div className="md:col-span-2">
-            <form onSubmit={handleSubmit}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Profile Settings</CardTitle>
-                  <CardDescription>
-                    Manage your public profile and email notifications.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Public Profile Section */}
-                  <div className="space-y-4">
-                    <h4 className="text-md font-semibold">Public Profile</h4>
-                    <div className="space-y-2">
-                      <Label htmlFor="username">Username</Label>
-                      <Input
-                        id="username"
-                        placeholder="Your display name"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        disabled={isSaving || isLoading}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="your@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={isSaving || isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  {/* Email Preferences Section */}
-                  <div className="space-y-4">
-                    <h4 className="text-md font-semibold">
-                      Email Notifications
-                    </h4>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="dailyDigest"
-                        // +++ THIS IS THE FIX (Part 2) +++
-                        // Add optional chaining (?.) as a safety net.
-                        checked={preferences?.dailyDigest}
-                        onCheckedChange={() =>
-                          handlePreferenceChange("dailyDigest")
-                        }
-                        disabled={isSaving || isLoading}
-                      />
-                      <Label htmlFor="dailyDigest" className="font-normal">
-                        Daily digest of market activity
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="newMarketAlerts"
-                        // +++ THIS IS THE FIX (Part 2) +++
-                        checked={preferences?.newMarketAlerts}
-                        onCheckedChange={() =>
-                          handlePreferenceChange("newMarketAlerts")
-                        }
-                        disabled={isSaving || isLoading}
-                      />
-                      <Label htmlFor="newMarketAlerts" className="font-normal">
-                        Alerts for new markets
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="tradeUpdates"
-                        // +++ THIS IS THE FIX (Part 2) +++
-                        checked={preferences?.tradeUpdates}
-                        onCheckedChange={() =>
-                          handlePreferenceChange("tradeUpdates")
-                        }
-                        disabled={isSaving || isLoading}
-                      />
-                      <Label htmlFor="tradeUpdates" className="font-normal">
-                        Updates on your trades and positions
-                      </Label>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    {statusMessage}
-                  </span>
-                  <Button
-                    type="submit"
-                    disabled={isSaving || isLoading || !isConnected}
-                  >
-                    {isSaving ? "Saving..." : "Save Profile"}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </form>
-          </div>
-
-          {/* Column 2: Wallet & Balances (This part is fine) */}
-          <div className="md:col-span-1">
+    <Layout>
+      <div className="container mx-auto p-4 mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Column 1: Profile & Settings */}
+        <div className="md:col-span-2">
+          <form onSubmit={handleSubmit}>
             <Card>
               <CardHeader>
-                <CardTitle>My Wallet</CardTitle>
+                <CardTitle>Profile Settings</CardTitle>
+                <CardDescription>
+                  Manage your public profile and email notifications.
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-5">
-                {/* Wallet Address Display */}
-                {isConnected && address ? (
-                  <div>
-                    <h3 className="text-md font-semibold mb-2">My Address</h3>
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-secondary">
-                      <span className="text-sm font-mono text-secondary-foreground">
-                        {truncatedAddress}
-                      </span>
-                      <CopyButton text={address} />
-                    </div>
+              <CardContent className="space-y-6">
+                {/* Public Profile Section */}
+                <div className="space-y-4">
+                  <h4 className="text-md font-semibold">Public Profile</h4>
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                      id="username"
+                      placeholder="Your display name"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      disabled={isSaving || isLoading}
+                    />
                   </div>
-                ) : (
-                  <p>Please connect your wallet.</p>
-                )}
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isSaving || isLoading}
+                    />
+                  </div>
+                </div>
 
-                {/* Balances Display */}
-                {isConnected && (
-                  <div>
-                    <h3 className="text-md font-semibold mb-3">
-                      Token Balances
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-baseline">
-                        <p className="text-sm text-muted-foreground">
-                          Native Balance
-                        </p>
-                        <p className="text-lg font-semibold text-right">
-                          {nativeBalance
-                            ? `${formatBalance(nativeBalance.value)} ${
-                                nativeBalance.symbol
-                              }`
-                            : "..."}
-                        </p>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between items-baseline">
-                        <p className="text-sm text-muted-foreground">
-                          {specifiedTokenBalance?.symbol || "Token"} Balance
-                        </p>
-                        <p className="text-lg font-semibold text-right">
-                          {specifiedTokenBalance
-                            ? `${formatBalance(
-                                specifiedTokenBalance.value,
-                                2
-                              )} ${specifiedTokenBalance.symbol}`
-                            : "..."}
-                        </p>
-                      </div>
+                <Separator />
+
+                {/* Email Preferences Section */}
+                <div className="space-y-4">
+                  <h4 className="text-md font-semibold">Email Notifications</h4>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="dailyDigest"
+                      // +++ THIS IS THE FIX (Part 2) +++
+                      // Add optional chaining (?.) as a safety net.
+                      checked={preferences?.dailyDigest}
+                      onCheckedChange={() =>
+                        handlePreferenceChange("dailyDigest")
+                      }
+                      disabled={isSaving || isLoading}
+                    />
+                    <Label htmlFor="dailyDigest" className="font-normal">
+                      Daily digest of market activity
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="newMarketAlerts"
+                      // +++ THIS IS THE FIX (Part 2) +++
+                      checked={preferences?.newMarketAlerts}
+                      onCheckedChange={() =>
+                        handlePreferenceChange("newMarketAlerts")
+                      }
+                      disabled={isSaving || isLoading}
+                    />
+                    <Label htmlFor="newMarketAlerts" className="font-normal">
+                      Alerts for new markets
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="tradeUpdates"
+                      // +++ THIS IS THE FIX (Part 2) +++
+                      checked={preferences?.tradeUpdates}
+                      onCheckedChange={() =>
+                        handlePreferenceChange("tradeUpdates")
+                      }
+                      disabled={isSaving || isLoading}
+                    />
+                    <Label htmlFor="tradeUpdates" className="font-normal">
+                      Updates on your trades and positions
+                    </Label>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">
+                  {statusMessage}
+                </span>
+                <Button
+                  type="submit"
+                  disabled={isSaving || isLoading || !isConnected}
+                >
+                  {isSaving ? "Saving..." : "Save Profile"}
+                </Button>
+              </CardFooter>
+            </Card>
+          </form>
+        </div>
+
+        {/* Column 2: Wallet & Balances (This part is fine) */}
+        <div className="md:col-span-1">
+          <Card>
+            <CardHeader>
+              <CardTitle>My Wallet</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              {/* Wallet Address Display */}
+              {isConnected && address ? (
+                <div>
+                  <h3 className="text-md font-semibold mb-2">My Address</h3>
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-secondary">
+                    <span className="text-sm font-mono text-secondary-foreground">
+                      {truncatedAddress}
+                    </span>
+                    <CopyButton text={address} />
+                  </div>
+                </div>
+              ) : (
+                <p>Please connect your wallet.</p>
+              )}
+
+              {/* Balances Display */}
+              {isConnected && (
+                <div>
+                  <h3 className="text-md font-semibold mb-3">Token Balances</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-baseline">
+                      <p className="text-sm text-muted-foreground">
+                        Native Balance
+                      </p>
+                      <p className="text-lg font-semibold text-right">
+                        {nativeBalance
+                          ? `${formatBalance(nativeBalance.value)} ${
+                              nativeBalance.symbol
+                            }`
+                          : "..."}
+                      </p>
+                    </div>
+                    <Separator />
+                    <div className="flex justify-between items-baseline">
+                      <p className="text-sm text-muted-foreground">
+                        {specifiedTokenBalance?.symbol || "Token"} Balance
+                      </p>
+                      <p className="text-lg font-semibold text-right">
+                        {specifiedTokenBalance
+                          ? `${formatBalance(specifiedTokenBalance.value, 2)} ${
+                              specifiedTokenBalance.symbol
+                            }`
+                          : "..."}
+                      </p>
                     </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
-      </Layout>
-    </>
+      </div>
+    </Layout>
   );
 }
 
