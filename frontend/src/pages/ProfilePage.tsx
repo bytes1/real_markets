@@ -28,8 +28,6 @@ interface EmailPreferences {
   tradeUpdates: boolean;
 }
 
-// +++ THIS IS THE FIX (Part 1) +++
-// We provide a default object to useState.
 const defaultPreferences: EmailPreferences = {
   dailyDigest: false,
   newMarketAlerts: false,
@@ -50,8 +48,6 @@ export function ProfilePage() {
   // --- Profile Form State ---
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  // +++ THIS IS THE FIX (Part 1) +++
-  // Initialize the state with the default object.
   const [preferences, setPreferences] =
     useState<EmailPreferences>(defaultPreferences);
 
@@ -59,6 +55,9 @@ export function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
+
+  // --- +++ NEW: DUMMY XP VALUE +++ ---
+  const userXP = 0;
 
   // --- Fetch User Profile ---
   useEffect(() => {
@@ -75,6 +74,8 @@ export function ProfilePage() {
             newMarketAlerts: data.emailPref_newMarketAlerts || false,
             tradeUpdates: data.emailPref_tradeUpdates || false,
           });
+          // In a real app, you might fetch XP here:
+          // setUserXP(data.xp || 0);
         })
         .catch((err) => {
           console.error("Failed to fetch profile:", err);
@@ -194,8 +195,6 @@ export function ProfilePage() {
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="dailyDigest"
-                      // +++ THIS IS THE FIX (Part 2) +++
-                      // Add optional chaining (?.) as a safety net.
                       checked={preferences?.dailyDigest}
                       onCheckedChange={() =>
                         handlePreferenceChange("dailyDigest")
@@ -209,7 +208,6 @@ export function ProfilePage() {
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="newMarketAlerts"
-                      // +++ THIS IS THE FIX (Part 2) +++
                       checked={preferences?.newMarketAlerts}
                       onCheckedChange={() =>
                         handlePreferenceChange("newMarketAlerts")
@@ -223,7 +221,6 @@ export function ProfilePage() {
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="tradeUpdates"
-                      // +++ THIS IS THE FIX (Part 2) +++
                       checked={preferences?.tradeUpdates}
                       onCheckedChange={() =>
                         handlePreferenceChange("tradeUpdates")
@@ -251,8 +248,28 @@ export function ProfilePage() {
           </form>
         </div>
 
-        {/* Column 2: Wallet & Balances (This part is fine) */}
-        <div className="md:col-span-1">
+        {/* --- +++ UPDATED COLUMN 2 +++ --- */}
+        {/* Added space-y-8 to this div */}
+        <div className="md:col-span-1 space-y-8">
+          {/* --- +++ NEW XP CARD +++ --- */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Reputation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-medium text-muted-foreground">
+                  ✨ Total XP
+                </span>
+                <span className="text-3xl font-bold text-primary">
+                  {userXP} XP
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+          {/* --- +++ END NEW XP CARD +++ --- */}
+
+          {/* Column 2: Wallet & Balances (Original Card) */}
           <Card>
             <CardHeader>
               <CardTitle>My Wallet</CardTitle>
